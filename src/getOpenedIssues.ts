@@ -1,3 +1,4 @@
+import * as core from '@actions/core'
 import * as github from '@actions/github'
 
 type Options = {
@@ -13,6 +14,8 @@ export async function getOpenedIssues({token, filter}: Options) {
     state: 'open',
     ...github.context.repo
   })
+
+  core.info(JSON.stringify(issues.data?.[0]?.user, null, 2))
 
   return issues.data
     .filter(issue => predicateStartsWith(issue, filter.startsWith))

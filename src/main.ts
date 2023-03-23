@@ -21,7 +21,8 @@ async function run(): Promise<void> {
       }
     })
 
-    core.info(JSON.stringify(activeIssues[0].user, null, 2))
+    core.info(`Active issues: ${activeIssues.length}`)
+
     core.setOutput('time', new Date().toTimeString())
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)

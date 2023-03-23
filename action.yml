@@ -1,11 +1,19 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Bang9'
+description: 'Issues to README.md'
+author: 'Hyungu Airen Kang'
 inputs:
-  milliseconds: # change this
+  token:
     required: true
-    description: 'input description here'
+    description: 'GitHub Personal access token here'
     default: 'default value if applicable'
+  starts_with:
+    required: false
+    description: 'Filter issues by title.startsWith'
+    default: ''
+  owner_only:
+    required: false
+    description: 'Filter issues by owner'
+    default: 'false'
 runs:
   using: 'node16'
   main: 'dist/index.js'

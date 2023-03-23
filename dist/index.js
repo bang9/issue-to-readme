@@ -84,11 +84,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getOpenedIssues = void 0;
+const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 function getOpenedIssues({ token, filter }) {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = github.getOctokit(token);
         const issues = yield octokit.rest.issues.listForRepo(Object.assign({ state: 'open' }, github.context.repo));
+        core.info(JSON.stringify((_b = (_a = issues.data) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.user, null, 2));
         return issues.data
             .filter(issue => predicateStartsWith(issue, filter.startsWith))
             .filter(issue => predicateOwnerOnly(issue, filter.ownerOnly));
@@ -163,7 +166,7 @@ function run() {
                     ownerOnly: JSON.parse(owner_only)
                 }
             });
-            core.info(JSON.stringify(activeIssues[0].user, null, 2));
+            core.info(`Active issues: ${activeIssues.length}`);
             core.setOutput('time', new Date().toTimeString());
         }
         catch (error) {
