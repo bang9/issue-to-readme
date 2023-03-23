@@ -61,10 +61,10 @@ function getContentFromIssue(issue) {
     const keyValue = content.split('\n');
     if (keyValue.length > 0) {
         keyValue.forEach(obj => {
-            const [_key, _value] = obj.trim().split(':');
-            if (_key && _value) {
+            const [_key, ..._value] = obj.trim().split(':');
+            if (_key && _value.join('')) {
                 const key = _key.trim().toLowerCase();
-                const value = _value.trim();
+                const value = _value.join('').trim();
                 if (key === 'title')
                     title = value;
                 if (key === 'url' || key === 'link')
