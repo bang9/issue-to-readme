@@ -57,22 +57,22 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getContentFromIssue = void 0;
 function getContentFromIssue(issue) {
     let title = issue.title;
-    let body = issue.body || '';
-    const bodies = body.split('\n');
-    if (bodies.length > 1) {
-        bodies.forEach(body => {
-            const [_key, _value] = body.trim().split(':');
+    let content = issue.body || '';
+    const keyValue = content.split('\n');
+    if (keyValue.length > 0) {
+        keyValue.forEach(obj => {
+            const [_key, _value] = obj.trim().split(':');
             if (_key && _value) {
                 const key = _key.trim().toLowerCase();
                 const value = _value.trim();
                 if (key === 'title')
                     title = value;
                 if (key === 'url' || key === 'link')
-                    body = value;
+                    content = value;
             }
         });
     }
-    return markdown(title, body);
+    return markdown(title, content);
 }
 exports.getContentFromIssue = getContentFromIssue;
 function markdown(title, url) {
@@ -172,7 +172,8 @@ function getOpenedIssues({ token, filter }) {
         const issues = yield octokit.rest.issues.listForRepo(Object.assign({ state: 'open' }, github.context.repo));
         return issues.data
             .filter(issue => predicateStartsWith(issue, filter.startsWith))
-            .filter(issue => predicateOwnerOnly(issue, filter.ownerOnly));
+            .filter(issue => predicateOwnerOnly(issue, filter.ownerOnly))
+            .reverse();
     });
 }
 exports.getOpenedIssues = getOpenedIssues;
