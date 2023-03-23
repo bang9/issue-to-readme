@@ -4,6 +4,7 @@ export function getContentFromIssue(issue: {
 }) {
   const context = {
     title: issue.title,
+    category: '',
     url: '',
     link: ''
   }
@@ -22,10 +23,13 @@ export function getContentFromIssue(issue: {
     })
   }
 
-  return markdown(
-    context.title,
-    context.url || context.link || issue.body || ''
-  )
+  return {
+    ...context,
+    markdown: markdown(
+      context.title,
+      context.url || context.link || issue.body || ''
+    )
+  }
 }
 
 function markdown(title: string, url: string) {

@@ -37,8 +37,9 @@ async function run(): Promise<void> {
 
       try {
         const date = asYYYYMM(issue.created_at, timezone)
-        const section = `## ${date}\n`
-        const content = `${getContentFromIssue(issue)}\n`
+        const {markdown, category} = getContentFromIssue(issue)
+        const section = `## ${category || date}\n`
+        const content = `${markdown}\n`
 
         readme = appendToReadme(readme, section, content)
 

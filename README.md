@@ -55,7 +55,44 @@ jobs:
           owner_only: true
 ```
 
-## Tips
+## Rules
+
+### Issues
+
+The content of an issue should be in the following format by default:
+
+```text
+title: Some title
+link: Some link
+```
+
+If `title` is not provided in the content, the issue title will be used as a substitute.
+
+The issues entered in this format are recorded in the README.md file in the following format:
+
+```markdown
+## YYYY-MM
+
+- [Title](Link)
+- [Title](Link)
+```
+
+`YYYY-MM` is the section in which the issues are grouped, and if the issue content contains a category field, the section will be replaced with the category name:
+
+```text
+title: Some title
+link: Some link
+category: Article
+```
+
+```markdown
+## Article
+
+- [Title](Link)
+- [Title](Link)
+```
+
+### README.md
 
 If you want to add a new section to the middle of the README instead of appending it to the end, you can use the following markup in your README.md file:
 
@@ -65,6 +102,7 @@ your contents
 [//]: # 'SECTION_START'
 
 <!-- Content will be added here -->
+
 your contents
 ```
 
