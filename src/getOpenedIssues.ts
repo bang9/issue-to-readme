@@ -17,6 +17,7 @@ export async function getOpenedIssues({token, filter}: Options) {
   return issues.data
     .filter(issue => predicateStartsWith(issue, filter.startsWith))
     .filter(issue => predicateOwnerOnly(issue, filter.ownerOnly))
+    .reverse()
 }
 
 function predicateStartsWith(issue: {title: string}, text = '') {
