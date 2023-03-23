@@ -14,6 +14,9 @@ inputs:
     required: false
     description: 'Filter issues by owner'
     default: 'false'
+  timezone:
+    required: false
+    description: 'Timezone for date format'
 runs:
   using: 'node16'
   main: 'dist/index.js'
