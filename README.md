@@ -55,6 +55,19 @@ jobs:
           owner_only: true
 ```
 
+## Tips
+
+If you want to add a new section to the middle of the README instead of appending it to the end, you can use the following markup in your README.md file:
+
+```markdown
+your contents
+
+[//]: # 'SECTION_START'
+
+<!-- Content will be added here -->
+your contents
+```
+
 ---
 
 The `GITHUB_TOKEN` is a default secret provided by GitHub, which is automatically generated when a workflow is triggered.
