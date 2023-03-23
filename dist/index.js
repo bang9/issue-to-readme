@@ -1,6 +1,33 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 2227:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.appendToReadme = void 0;
+function appendToReadme(readme, section, content) {
+    const index = readme.indexOf(section);
+    if (index < 0) {
+        // not found
+        readme = section + content + readme;
+    }
+    else {
+        // found
+        readme =
+            readme.slice(0, index + section.length) +
+                content +
+                readme.slice(index + section.length);
+    }
+    return readme;
+}
+exports.appendToReadme = appendToReadme;
+
+
+/***/ }),
+
 /***/ 5545:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -264,6 +291,7 @@ const getContentFromIssue_1 = __nccwpck_require__(7556);
 const updateIssue_1 = __nccwpck_require__(1041);
 const getOwner_1 = __nccwpck_require__(5151);
 const commitPush_1 = __nccwpck_require__(5545);
+const appendToReadme_1 = __nccwpck_require__(2227);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -285,8 +313,8 @@ function run() {
                 try {
                     const date = (0, yyyymm_1.asYYYYMM)(issue.created_at, timezone);
                     const section = `## ${date}\n`;
-                    const content = (0, getContentFromIssue_1.getContentFromIssue)(issue);
-                    readme = appendToReadme(readme, section, content);
+                    const content = `${(0, getContentFromIssue_1.getContentFromIssue)(issue)}\n`;
+                    readme = (0, appendToReadme_1.appendToReadme)(readme, section, content);
                     yield (0, updateIssue_1.updateIssue)(token, issue.number, 'closed');
                     closedIssues.push(issue.number);
                     core.info(`Closed issue #${issue.number}: ${issue.title}`);
@@ -313,24 +341,6 @@ function run() {
                 core.setFailed(error.message);
         }
     });
-}
-// 1. Write find section and append text to README.md function
-// 2. Section search keyword is a date like "2023-01"
-// 3. If not found, add new section and append text
-function appendToReadme(readme, section, content) {
-    const index = readme.indexOf(section);
-    if (index < 0) {
-        // not found
-        readme += section + content;
-    }
-    else {
-        // found
-        readme =
-            readme.slice(0, index + section.length) +
-                content +
-                readme.slice(index + section.length);
-    }
-    return readme;
 }
 run();
 

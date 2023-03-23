@@ -8,6 +8,7 @@ import {getContentFromIssue} from './getContentFromIssue'
 import {updateIssue} from './updateIssue'
 import {getOwner} from './getOwner'
 import {commitPush} from './commitPush'
+import {appendToReadme} from './appendToReadme'
 
 async function run(): Promise<void> {
   try {
@@ -37,7 +38,7 @@ async function run(): Promise<void> {
       try {
         const date = asYYYYMM(issue.created_at, timezone)
         const section = `## ${date}\n`
-        const content = getContentFromIssue(issue)
+        const content = `${getContentFromIssue(issue)}\n`
 
         readme = appendToReadme(readme, section, content)
 
@@ -66,24 +67,6 @@ async function run(): Promise<void> {
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
-}
-
-// 1. Write find section and append text to README.md function
-// 2. Section search keyword is a date like "2023-01"
-// 3. If not found, add new section and append text
-function appendToReadme(readme: string, section: string, content: string) {
-  const index = readme.indexOf(section)
-  if (index < 0) {
-    // not found
-    readme += section + content
-  } else {
-    // found
-    readme =
-      readme.slice(0, index + section.length) +
-      content +
-      readme.slice(index + section.length)
-  }
-  return readme
 }
 
 run()
