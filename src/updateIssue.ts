@@ -1,10 +1,14 @@
 import * as github from '@actions/github'
 
-export async function closeIssue(token: string, issueNumber: number) {
+export async function updateIssue(
+  token: string,
+  issueNumber: number,
+  state: 'closed' | 'open'
+) {
   const octokit = github.getOctokit(token)
   await octokit.rest.issues.update({
     ...github.context.repo,
-    state: 'closed',
+    state,
     issue_number: issueNumber
   })
 }

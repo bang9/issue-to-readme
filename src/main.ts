@@ -5,7 +5,7 @@ import {getOpenedIssues} from './getOpenedIssues'
 import * as fs from 'fs'
 import {asYYYYMM} from './yyyymm'
 import {getContentFromIssue} from './getContentFromIssue'
-import {closeIssue} from './closeIssue'
+import {updateIssue} from './updateIssue'
 import {getOwner} from './getOwner'
 import {commitPush} from './commitPush'
 
@@ -28,6 +28,7 @@ async function run(): Promise<void> {
       }
     })
     core.info(`Opened issues: ${openedIssues.length}`)
+    const closedIssues: number[] = []
 
     let readme = fs.readFileSync('README.md', {encoding: 'utf-8'})
     for (const issue of openedIssues) {
@@ -40,7 +41,8 @@ async function run(): Promise<void> {
 
         readme = appendToReadme(readme, section, content)
 
-        await closeIssue(token, issue.number)
+        await updateIssue(token, issue.number, 'closed')
+        closedIssues.push(issue.number)
         core.info(`Closed issue #${issue.number}: ${issue.title}`)
       } catch (error) {
         readme = tmpReadme
@@ -49,10 +51,16 @@ async function run(): Promise<void> {
 
     core.info('Update README.md')
     fs.writeFileSync('README.md', readme, {encoding: 'utf-8'})
-
-    const {name, email} = await getOwner(token)
-    core.info(`Commit and push as ${name} <${email}>`)
-    commitPush(name || 'owner', email || 'unknown@email.com')
+    try {
+      const {name, email} = await getOwner(token)
+      core.info(`Commit and push as ${name} <${email}>`)
+      commitPush(name || 'owner', email || 'unknown@email.com')
+    } catch {
+      core.info('Commit and push failed, re-open issues')
+      await Promise.all(
+        closedIssues.map(async issueNum => updateIssue(token, issueNum, 'open'))
+      )
+    }
 
     core.setOutput('time', new Date().toTimeString())
   } catch (error) {

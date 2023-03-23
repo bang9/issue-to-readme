@@ -1,57 +1,6 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 3134:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.closeIssue = void 0;
-const github = __importStar(__nccwpck_require__(5438));
-function closeIssue(token, issueNumber) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const octokit = github.getOctokit(token);
-        yield octokit.rest.issues.update(Object.assign(Object.assign({}, github.context.repo), { state: 'closed', issue_number: issueNumber }));
-    });
-}
-exports.closeIssue = closeIssue;
-
-
-/***/ }),
-
 /***/ 5545:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -312,7 +261,7 @@ const getOpenedIssues_1 = __nccwpck_require__(5121);
 const fs = __importStar(__nccwpck_require__(5747));
 const yyyymm_1 = __nccwpck_require__(6042);
 const getContentFromIssue_1 = __nccwpck_require__(7556);
-const closeIssue_1 = __nccwpck_require__(3134);
+const updateIssue_1 = __nccwpck_require__(1041);
 const getOwner_1 = __nccwpck_require__(5151);
 const commitPush_1 = __nccwpck_require__(5545);
 function run() {
@@ -329,6 +278,7 @@ function run() {
                 }
             });
             core.info(`Opened issues: ${openedIssues.length}`);
+            const closedIssues = [];
             let readme = fs.readFileSync('README.md', { encoding: 'utf-8' });
             for (const issue of openedIssues) {
                 let tmpReadme = readme;
@@ -337,7 +287,8 @@ function run() {
                     const section = `## ${date}\n`;
                     const content = (0, getContentFromIssue_1.getContentFromIssue)(issue);
                     readme = appendToReadme(readme, section, content);
-                    yield (0, closeIssue_1.closeIssue)(token, issue.number);
+                    yield (0, updateIssue_1.updateIssue)(token, issue.number, 'closed');
+                    closedIssues.push(issue.number);
                     core.info(`Closed issue #${issue.number}: ${issue.title}`);
                 }
                 catch (error) {
@@ -346,9 +297,15 @@ function run() {
             }
             core.info('Update README.md');
             fs.writeFileSync('README.md', readme, { encoding: 'utf-8' });
-            const { name, email } = yield (0, getOwner_1.getOwner)(token);
-            core.info(`Commit and push as ${name} <${email}>`);
-            (0, commitPush_1.commitPush)(name || 'owner', email || 'unknown@email.com');
+            try {
+                const { name, email } = yield (0, getOwner_1.getOwner)(token);
+                core.info(`Commit and push as ${name} <${email}>`);
+                (0, commitPush_1.commitPush)(name || 'owner', email || 'unknown@email.com');
+            }
+            catch (_a) {
+                core.info('Commit and push failed, re-open issues');
+                yield Promise.all(closedIssues.map((issueNum) => __awaiter(this, void 0, void 0, function* () { return (0, updateIssue_1.updateIssue)(token, issueNum, 'open'); })));
+            }
             core.setOutput('time', new Date().toTimeString());
         }
         catch (error) {
@@ -376,6 +333,57 @@ function appendToReadme(readme, section, content) {
     return readme;
 }
 run();
+
+
+/***/ }),
+
+/***/ 1041:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.updateIssue = void 0;
+const github = __importStar(__nccwpck_require__(5438));
+function updateIssue(token, issueNumber, state) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const octokit = github.getOctokit(token);
+        yield octokit.rest.issues.update(Object.assign(Object.assign({}, github.context.repo), { state, issue_number: issueNumber }));
+    });
+}
+exports.updateIssue = updateIssue;
 
 
 /***/ }),
