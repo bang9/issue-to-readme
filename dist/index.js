@@ -2,17 +2,30 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 2227:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.appendToReadme = void 0;
+const constants_1 = __nccwpck_require__(5105);
 function appendToReadme(readme, section, content) {
     const index = readme.indexOf(section);
     if (index < 0) {
-        // not found
-        readme = section + content + readme;
+        // find section start
+        const start = readme.indexOf(constants_1.README_SECTION_START);
+        if (start < 0) {
+            // not found
+            readme = section + content + readme;
+        }
+        else {
+            // found
+            readme =
+                readme.slice(0, start + constants_1.README_SECTION_START.length) +
+                    section +
+                    content +
+                    readme.slice(start + constants_1.README_SECTION_START.length);
+        }
     }
     else {
         // found
@@ -48,6 +61,18 @@ exports.commitPush = commitPush;
 
 /***/ }),
 
+/***/ 5105:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.README_SECTION_START = void 0;
+exports.README_SECTION_START = "\n[//]: # 'SECTION_START'\n";
+
+
+/***/ }),
+
 /***/ 7556:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -58,6 +83,7 @@ exports.getContentFromIssue = void 0;
 function getContentFromIssue(issue) {
     const context = {
         title: issue.title,
+        category: '',
         url: '',
         link: ''
     };
@@ -73,7 +99,7 @@ function getContentFromIssue(issue) {
             });
         });
     }
-    return markdown(context.title, context.url || context.link || issue.body || '');
+    return Object.assign(Object.assign({}, context), { markdown: markdown(context.title, context.url || context.link || issue.body || '') });
 }
 exports.getContentFromIssue = getContentFromIssue;
 function markdown(title, url) {
@@ -314,8 +340,9 @@ function run() {
                 let tmpReadme = readme;
                 try {
                     const date = (0, yyyymm_1.asYYYYMM)(issue.created_at, timezone);
-                    const section = `## ${date}\n`;
-                    const content = `${(0, getContentFromIssue_1.getContentFromIssue)(issue)}\n`;
+                    const { markdown, category } = (0, getContentFromIssue_1.getContentFromIssue)(issue);
+                    const section = `## ${category || date}\n`;
+                    const content = `${markdown}\n`;
                     readme = (0, appendToReadme_1.appendToReadme)(readme, section, content);
                     yield (0, updateIssue_1.updateIssue)(token, issue.number, 'closed');
                     closedIssues.push(issue.number);

@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Update
-        uses: bang9/issue-to-readme@0.0.4
+        uses: bang9/issue-to-readme@0.0.5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner_only: true
@@ -49,7 +49,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Update
-        uses: bang9/issue-to-readme@0.0.4
+        uses: bang9/issue-to-readme@0.0.5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner_only: true
