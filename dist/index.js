@@ -169,7 +169,7 @@ const github = __importStar(__nccwpck_require__(5438));
 function getOpenedIssues({ token, filter }) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = github.getOctokit(token);
-        const issues = yield octokit.rest.issues.listForRepo(Object.assign({ state: 'open' }, github.context.repo));
+        const issues = yield octokit.rest.issues.listForRepo(Object.assign({ state: 'open', per_page: 100 }, github.context.repo));
         return issues.data
             .filter(issue => predicateStartsWith(issue, filter.startsWith))
             .filter(issue => predicateOwnerOnly(issue, filter.ownerOnly))

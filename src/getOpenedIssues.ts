@@ -11,6 +11,7 @@ export async function getOpenedIssues({token, filter}: Options) {
   const octokit = github.getOctokit(token)
   const issues = await octokit.rest.issues.listForRepo({
     state: 'open',
+    per_page: 100,
     ...github.context.repo
   })
 
