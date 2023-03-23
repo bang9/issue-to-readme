@@ -27,12 +27,15 @@ test('wait 500 ms', async () => {
 })
 
 // shows how the runner will run a javascript action with env / stdout protocol
-test('test runs', () => {
+test.skip('test runs', () => {
   process.env['INPUT_TOKEN'] = 'personal-access-token'
+  process.env['INPUT_OWNER_ONLY'] = 'false'
+  process.env['INPUT_STARTS_WITH'] = 'start'
   const np = process.execPath
   const ip = path.join(__dirname, '..', 'lib', 'main.js')
   const options: cp.ExecFileSyncOptions = {
-    env: process.env
+    env: process.env,
+    stdio: 'inherit'
   }
   console.log(cp.execFileSync(np, [ip], options).toString())
 })

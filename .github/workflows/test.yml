@@ -26,3 +26,4 @@ jobs:
       - uses: ./
         with:
           token: ${{ secrets.GH_TOKEN }}
+          owner_only: true
