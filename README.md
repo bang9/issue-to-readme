@@ -94,7 +94,7 @@ category: Article
 
 ### README.md
 
-If you want to add a new section to the middle of the README instead of appending it to the end, you can use the following markup in your README.md file:
+If you want to add a new section to the middle of the README instead of appending it to the start, you can use the following markup in your README.md file:
 
 ```markdown
 your contents
