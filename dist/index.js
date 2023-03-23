@@ -56,23 +56,24 @@ exports.commitPush = commitPush;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getContentFromIssue = void 0;
 function getContentFromIssue(issue) {
-    let title = issue.title;
-    let content = issue.body || '';
-    const keyValue = content.split('\n');
+    const context = {
+        title: issue.title,
+        url: '',
+        link: ''
+    };
+    const reservedKey = Object.keys(context);
+    const keyValue = (issue.body || '').split('\n');
     if (keyValue.length > 0) {
         keyValue.forEach(obj => {
-            const [_key, ..._value] = obj.trim().split(':');
-            if (_key && _value.join('')) {
-                const key = _key.trim().toLowerCase();
-                const value = _value.join('').trim();
-                if (key === 'title')
-                    title = value;
-                if (key === 'url' || key === 'link')
-                    content = value;
-            }
+            const text = obj.trim();
+            reservedKey.forEach(key => {
+                if (text.startsWith(`${key}:`)) {
+                    context[key] = text.replace(`${key}:`, '').trim();
+                }
+            });
         });
     }
-    return markdown(title, content);
+    return markdown(context.title, context.url || context.link || issue.body || '');
 }
 exports.getContentFromIssue = getContentFromIssue;
 function markdown(title, url) {
