@@ -1,111 +1,62 @@
-# 2023-03
+# Github Actions for Updating README with Closed Issues
 
-<p align="center">
-  <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
-</p>
+This GitHub Actions updates the README.md file of a repository by adding closed issues grouped by month.<br/>
+It does this by reading the open issues, creating a new section in the README for each month, and then marking the issue as closed.<br/>
+If there is an error while updating the README or committing the changes, it will reopen the closed issues.
 
-# Create a JavaScript Action using TypeScript
+## Inputs
 
-Use this template to bootstrap the creation of a TypeScript action.:rocket:
+- token (required): The GitHub token to authenticate the API requests.
+- owner_only: Whether to filter only issues created by the owner of the repository (true or false, default is false).
+- starts_with: A prefix to filter issues by title (default is empty string).
+- timezone: The timezone to use when grouping issues by month (default is Asia/Seoul).
 
-This template includes compilation support, tests, a validation workflow, publishing, and versioning guidance.
+## Usage
 
-If you are new, there's also a simpler introduction. See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+To use this GitHub Actions, create a new YAML file in the `.github/workflows` directory of your repository.
 
-## Create an action from this template
-
-Click the `Use this Template` and provide the new repo details for your action
-
-## Code in Main
-
-> First, you'll need to have a reasonably modern version of `node` handy. This won't work with versions older than 9, for instance.
-
-Install the dependencies
-
-```bash
-$ npm install
-```
-
-Build the typescript and package it for distribution
-
-```bash
-$ npm run build && npm run package
-```
-
-Run the tests :heavy_check_mark:
-
-```bash
-$ npm test
-
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
-
-...
-```
-
-## Change action.yml
-
-The action.yml defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try {
-      ...
-  }
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Publish to a distribution branch
-
-Actions are run from GitHub repos so we will checkin the packed dist folder.
-
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-
-```bash
-$ npm run package
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket:
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Validate
-
-You can now validate the action by referencing `./` in a workflow in your repo (see [test.yml](.github/workflows/test.yml))
+Here is a cron example:
 
 ```yaml
-uses: ./
-with:
-  milliseconds: 1000
+name: Update readme (cron)
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Update
+        uses: bang9/issue-to-readme@0.0.4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          owner_only: true
 ```
 
-See the [actions tab](https://github.com/actions/typescript-action/actions) for runs of this action! :rocket:
+Here is a manual trigger example:
 
-## Usage:
+```yaml
+name: Update readme (manual)
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
+      - name: Update
+        uses: bang9/issue-to-readme@0.0.4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          owner_only: true
+```
+
+---
+
+The `GITHUB_TOKEN` is a default secret provided by GitHub, which is automatically generated when a workflow is triggered.
+It has the necessary permissions to access the repository and perform API requests.
+you can edit permissions in the repository of [Settings > Actions > General > Workflow permissions].
