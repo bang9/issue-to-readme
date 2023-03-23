@@ -35,7 +35,6 @@ const core = __importStar(__nccwpck_require__(2186));
 function getInputs(names) {
     return names.reduce((accum, name) => {
         const input = core.getInput(name);
-        console.log(name, ':', input);
         if (input)
             accum[name] = input;
         return accum;
@@ -154,7 +153,6 @@ const getOpenedIssues_1 = __nccwpck_require__(5121);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log('start?');
             const { token, owner_only = 'false', starts_with = '' } = (0, getInputs_1.getInputs)(['token', 'starts_with', 'owner_only']);
             if (!token)
                 throw new Error('token is required');
