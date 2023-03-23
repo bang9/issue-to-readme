@@ -2,24 +2,30 @@ export function getContentFromIssue(issue: {
   title: string
   body?: null | string
 }) {
-  let title = issue.title
-  let content = issue.body || ''
+  const context = {
+    title: issue.title,
+    url: '',
+    link: ''
+  }
 
-  const keyValue = content.split('\n')
+  const reservedKey = Object.keys(context) as (keyof typeof context)[]
+  const keyValue = (issue.body || '').split('\n')
   if (keyValue.length > 0) {
     keyValue.forEach(obj => {
-      const [_key, ..._value] = obj.trim().split(':')
-      if (_key && _value.join('')) {
-        const key = _key.trim().toLowerCase()
-        const value = _value.join('').trim()
+      const text = obj.trim()
 
-        if (key === 'title') title = value
-        if (key === 'url' || key === 'link') content = value
-      }
+      reservedKey.forEach(key => {
+        if (text.startsWith(`${key}:`)) {
+          context[key] = text.replace(`${key}:`, '').trim()
+        }
+      })
     })
   }
 
-  return markdown(title, content)
+  return markdown(
+    context.title,
+    context.url || context.link || issue.body || ''
+  )
 }
 
 function markdown(title: string, url: string) {
