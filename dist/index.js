@@ -1,6 +1,111 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 3134:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.closeIssue = void 0;
+const github = __importStar(__nccwpck_require__(5438));
+function closeIssue(token, issueNumber) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const octokit = github.getOctokit(token);
+        yield octokit.rest.issues.update(Object.assign(Object.assign({}, github.context.repo), { state: 'closed', issue_number: issueNumber }));
+    });
+}
+exports.closeIssue = closeIssue;
+
+
+/***/ }),
+
+/***/ 5545:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.commitPush = void 0;
+const child_process_1 = __nccwpck_require__(3129);
+function commitPush(name, email) {
+    (0, child_process_1.execSync)(`git config --global user.name "${name}"`);
+    (0, child_process_1.execSync)(`git config --global user.email "${email}"`);
+    (0, child_process_1.execSync)('git add README.md');
+    (0, child_process_1.execSync)('git commit -m "Update README.md"');
+    (0, child_process_1.execSync)('git push');
+}
+exports.commitPush = commitPush;
+
+
+/***/ }),
+
+/***/ 7556:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getContentFromIssue = void 0;
+function getContentFromIssue(issue) {
+    let title = issue.title;
+    let body = issue.body || '';
+    const bodies = body.split('\n');
+    if (bodies.length > 1) {
+        bodies.forEach(body => {
+            const [_key, _value] = body.trim().split(':');
+            if (_key && _value) {
+                const key = _key.trim().toLowerCase();
+                const value = _value.trim();
+                if (key === 'title')
+                    title = value;
+                if (key === 'url' || key === 'link')
+                    body = value;
+            }
+        });
+    }
+    return markdown(title, body);
+}
+exports.getContentFromIssue = getContentFromIssue;
+function markdown(title, url) {
+    return `- [${title}](${url})\n`;
+}
+
+
+/***/ }),
+
 /***/ 6414:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -109,6 +214,60 @@ function predicateOwnerOnly(issue, ownerOnly = false) {
 
 /***/ }),
 
+/***/ 5151:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getOwner = void 0;
+const github = __importStar(__nccwpck_require__(5438));
+function getOwner(token) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const octokit = github.getOctokit(token);
+        const { data } = yield octokit.rest.users.getByUsername({
+            username: github.context.repo.owner
+        });
+        return data;
+    });
+}
+exports.getOwner = getOwner;
+
+
+/***/ }),
+
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -152,26 +311,44 @@ const getInputs_1 = __nccwpck_require__(6414);
 const getOpenedIssues_1 = __nccwpck_require__(5121);
 const fs = __importStar(__nccwpck_require__(5747));
 const yyyymm_1 = __nccwpck_require__(6042);
+const getContentFromIssue_1 = __nccwpck_require__(7556);
+const closeIssue_1 = __nccwpck_require__(3134);
+const getOwner_1 = __nccwpck_require__(5151);
+const commitPush_1 = __nccwpck_require__(5545);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { token, owner_only = 'false', starts_with = '', timezone = 'Asia/Seoul' } = (0, getInputs_1.getInputs)(['token', 'starts_with', 'owner_only', 'timezone']);
             if (!token)
                 throw new Error('token is required');
-            const activeIssues = yield (0, getOpenedIssues_1.getOpenedIssues)({
+            const openedIssues = yield (0, getOpenedIssues_1.getOpenedIssues)({
                 token,
                 filter: {
                     startsWith: starts_with,
                     ownerOnly: JSON.parse(owner_only)
                 }
             });
-            core.info(`Active issues: ${activeIssues.length}`);
-            const readme = fs.readFileSync('README.md', { encoding: 'utf-8' });
-            core.info(`README.md: ${readme}`);
-            for (const issue of activeIssues) {
-                const date = (0, yyyymm_1.asYYYYMM)(issue.created_at, timezone);
-                core.info(`Issue: ${issue.title} (${date}) / ${issue.body}/ ${issue.body_text}`);
+            core.info(`Opened issues: ${openedIssues.length}`);
+            let readme = fs.readFileSync('README.md', { encoding: 'utf-8' });
+            for (const issue of openedIssues) {
+                let tmpReadme = readme;
+                try {
+                    const date = (0, yyyymm_1.asYYYYMM)(issue.created_at, timezone);
+                    const section = `## ${date}\n`;
+                    const content = (0, getContentFromIssue_1.getContentFromIssue)(issue);
+                    readme = appendToReadme(readme, section, content);
+                    yield (0, closeIssue_1.closeIssue)(token, issue.number);
+                    core.info(`Closed issue #${issue.number}: ${issue.title}`);
+                }
+                catch (error) {
+                    readme = tmpReadme;
+                }
             }
+            core.info('Update README.md');
+            fs.writeFileSync('README.md', readme, { encoding: 'utf-8' });
+            const { name, email } = yield (0, getOwner_1.getOwner)(token);
+            core.info(`Commit and push as ${name} <${email}>`);
+            (0, commitPush_1.commitPush)(name || 'owner', email || 'unknown@email.com');
             core.setOutput('time', new Date().toTimeString());
         }
         catch (error) {
@@ -179,6 +356,24 @@ function run() {
                 core.setFailed(error.message);
         }
     });
+}
+// 1. Write find section and append text to README.md function
+// 2. Section search keyword is a date like "2023-01"
+// 3. If not found, add new section and append text
+function appendToReadme(readme, section, content) {
+    const index = readme.indexOf(section);
+    if (index < 0) {
+        // not found
+        readme += section + content;
+    }
+    else {
+        // found
+        readme =
+            readme.slice(0, index + section.length) +
+                content +
+                readme.slice(index + section.length);
+    }
+    return readme;
 }
 run();
 
@@ -9861,6 +10056,14 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 3129:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 
