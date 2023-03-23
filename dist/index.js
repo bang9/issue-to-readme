@@ -91,7 +91,7 @@ function getContentFromIssue(issue) {
     const keyValue = (issue.body || '').split('\n');
     if (keyValue.length > 0) {
         keyValue.forEach(obj => {
-            const text = obj.trim();
+            const text = obj.trim().toLowerCase();
             reservedKey.forEach(key => {
                 if (text.startsWith(`${key}:`)) {
                     context[key] = text.replace(`${key}:`, '').trim();
