@@ -18,10 +18,10 @@ async function run(): Promise<void> {
       timezone = 'Asia/Seoul'
     } = getInputs(['token', 'starts_with', 'owner_only', 'timezone'])
 
-    if (!token) throw new Error('token is required')
+    if (!token) throw new Error('github_token is required')
 
     const openedIssues = await getOpenedIssues({
-      token,
+      token: token,
       filter: {
         startsWith: starts_with,
         ownerOnly: JSON.parse(owner_only) as boolean

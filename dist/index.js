@@ -269,9 +269,9 @@ function run() {
         try {
             const { token, owner_only = 'false', starts_with = '', timezone = 'Asia/Seoul' } = (0, getInputs_1.getInputs)(['token', 'starts_with', 'owner_only', 'timezone']);
             if (!token)
-                throw new Error('token is required');
+                throw new Error('github_token is required');
             const openedIssues = yield (0, getOpenedIssues_1.getOpenedIssues)({
-                token,
+                token: token,
                 filter: {
                     startsWith: starts_with,
                     ownerOnly: JSON.parse(owner_only)

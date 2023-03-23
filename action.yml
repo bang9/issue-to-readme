@@ -5,7 +5,6 @@ inputs:
   token:
     required: true
     description: 'GitHub Personal access token here'
-    default: 'default value if applicable'
   starts_with:
     required: false
     description: 'Filter issues by title.startsWith'
