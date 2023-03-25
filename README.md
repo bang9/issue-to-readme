@@ -18,7 +18,7 @@ To use this GitHub Actions, create a new YAML file in the `.github/workflows` di
 Here is a issues opened example:
 
 ```yaml
-name: Update readme (cron)
+name: Update readme (issues opened)
 on:
   issues:
     types: [opened]
