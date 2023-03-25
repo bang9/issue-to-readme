@@ -15,6 +15,27 @@ If there is an error while updating the README or committing the changes, it wil
 
 To use this GitHub Actions, create a new YAML file in the `.github/workflows` directory of your repository.
 
+Here is a issues opened example:
+
+```yaml
+name: Update readme (cron)
+on:
+  issues:
+    types: [opened]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Update
+        uses: bang9/issue-to-readme@0.0.5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          owner_only: true
+```
+
 Here is a cron example:
 
 ```yaml
