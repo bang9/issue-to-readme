@@ -264,7 +264,10 @@ function getOwner(token) {
         const { data } = yield octokit.rest.users.getByUsername({
             username: github.context.repo.owner
         });
-        return data;
+        return {
+            name: data.name || 'github-actions[bot]',
+            email: data.email || 'github-actions[bot]@users.noreply.github.com'
+        };
     });
 }
 exports.getOwner = getOwner;
@@ -357,7 +360,7 @@ function run() {
             try {
                 const { name, email } = yield (0, getOwner_1.getOwner)(token);
                 core.info(`Commit and push as ${name} <${email}>`);
-                (0, commitPush_1.commitPush)(name || 'owner', email || 'unknown@email.com');
+                (0, commitPush_1.commitPush)(name, email);
             }
             catch (_a) {
                 core.info('Commit and push failed, re-open issues');

@@ -5,5 +5,8 @@ export async function getOwner(token: string) {
   const {data} = await octokit.rest.users.getByUsername({
     username: github.context.repo.owner
   })
-  return data
+  return {
+    name: data.name || 'github-actions[bot]',
+    email: data.email || 'github-actions[bot]@users.noreply.github.com'
+  }
 }

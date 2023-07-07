@@ -56,7 +56,7 @@ async function run(): Promise<void> {
     try {
       const {name, email} = await getOwner(token)
       core.info(`Commit and push as ${name} <${email}>`)
-      commitPush(name || 'owner', email || 'unknown@email.com')
+      commitPush(name, email)
     } catch {
       core.info('Commit and push failed, re-open issues')
       await Promise.all(
