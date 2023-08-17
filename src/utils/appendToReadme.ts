@@ -1,4 +1,4 @@
-import {README_SECTION_START} from './constants'
+import {README_SECTION_START} from '../constants'
 
 export function appendToReadme(
   readme: string,

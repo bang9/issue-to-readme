@@ -1,115 +1,7 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 2227:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.appendToReadme = void 0;
-const constants_1 = __nccwpck_require__(5105);
-function appendToReadme(readme, section, content) {
-    const index = readme.indexOf(section);
-    if (index < 0) {
-        // find section start
-        const start = readme.indexOf(constants_1.README_SECTION_START);
-        if (start < 0) {
-            // not found
-            readme = section + content + readme;
-        }
-        else {
-            // found
-            readme =
-                readme.slice(0, start + constants_1.README_SECTION_START.length) +
-                    section +
-                    content +
-                    readme.slice(start + constants_1.README_SECTION_START.length);
-        }
-    }
-    else {
-        // found
-        readme =
-            readme.slice(0, index + section.length) +
-                content +
-                readme.slice(index + section.length);
-    }
-    return readme;
-}
-exports.appendToReadme = appendToReadme;
-
-
-/***/ }),
-
-/***/ 5545:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.commitPush = void 0;
-const child_process_1 = __nccwpck_require__(3129);
-function commitPush(name, email) {
-    (0, child_process_1.execSync)(`git config --global user.name "${name}"`);
-    (0, child_process_1.execSync)(`git config --global user.email "${email}"`);
-    (0, child_process_1.execSync)('git add README.md');
-    (0, child_process_1.execSync)('git commit -m "Update README.md"');
-    (0, child_process_1.execSync)('git push');
-}
-exports.commitPush = commitPush;
-
-
-/***/ }),
-
-/***/ 5105:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.README_SECTION_START = void 0;
-exports.README_SECTION_START = "\n[//]: # 'SECTION_START'\n";
-
-
-/***/ }),
-
-/***/ 7556:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getContentFromIssue = void 0;
-function getContentFromIssue(issue) {
-    const context = {
-        title: issue.title,
-        category: '',
-        url: '',
-        link: ''
-    };
-    const reservedKey = Object.keys(context);
-    const keyValue = (issue.body || '').split('\n');
-    if (keyValue.length > 0) {
-        keyValue.forEach(obj => {
-            const text = obj.trim().toLowerCase();
-            reservedKey.forEach(key => {
-                if (text.startsWith(`${key}:`)) {
-                    context[key] = text.replace(`${key}:`, '').trim();
-                }
-            });
-        });
-    }
-    return Object.assign(Object.assign({}, context), { markdown: markdown(context.title, context.url || context.link || issue.body || '') });
-}
-exports.getContentFromIssue = getContentFromIssue;
-function markdown(title, url) {
-    return `- [${title}](${url})\n`;
-}
-
-
-/***/ }),
-
-/***/ 6414:
+/***/ 7233:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -153,7 +45,39 @@ exports.getInputs = getInputs;
 
 /***/ }),
 
-/***/ 5121:
+/***/ 5105:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.README_SECTION_START = void 0;
+exports.README_SECTION_START = "\n[//]: # 'SECTION_START'\n";
+
+
+/***/ }),
+
+/***/ 8853:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.commitPush = void 0;
+const child_process_1 = __nccwpck_require__(3129);
+function commitPush(name, email) {
+    (0, child_process_1.execSync)(`git config --global user.name "${name}"`);
+    (0, child_process_1.execSync)(`git config --global user.email "${email}"`);
+    (0, child_process_1.execSync)('git add README.md');
+    (0, child_process_1.execSync)('git commit -m "Update README.md"');
+    (0, child_process_1.execSync)('git push');
+}
+exports.commitPush = commitPush;
+
+
+/***/ }),
+
+/***/ 6548:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -218,7 +142,7 @@ function predicateOwnerOnly(issue, ownerOnly = false) {
 
 /***/ }),
 
-/***/ 5151:
+/***/ 6942:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -275,111 +199,7 @@ exports.getOwner = getOwner;
 
 /***/ }),
 
-/***/ 3109:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(2186));
-const getInputs_1 = __nccwpck_require__(6414);
-const getOpenedIssues_1 = __nccwpck_require__(5121);
-const fs = __importStar(__nccwpck_require__(5747));
-const yyyymm_1 = __nccwpck_require__(6042);
-const getContentFromIssue_1 = __nccwpck_require__(7556);
-const updateIssue_1 = __nccwpck_require__(1041);
-const getOwner_1 = __nccwpck_require__(5151);
-const commitPush_1 = __nccwpck_require__(5545);
-const appendToReadme_1 = __nccwpck_require__(2227);
-function run() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { token, owner_only = 'false', starts_with = '', timezone = 'Asia/Seoul' } = (0, getInputs_1.getInputs)(['token', 'starts_with', 'owner_only', 'timezone']);
-            if (!token)
-                throw new Error('github_token is required');
-            const openedIssues = yield (0, getOpenedIssues_1.getOpenedIssues)({
-                token: token,
-                filter: {
-                    startsWith: starts_with,
-                    ownerOnly: JSON.parse(owner_only)
-                }
-            });
-            core.info(`Opened issues: ${openedIssues.length}`);
-            const closedIssues = [];
-            let readme = fs.readFileSync('README.md', { encoding: 'utf-8' });
-            for (const issue of openedIssues) {
-                let tmpReadme = readme;
-                try {
-                    const date = (0, yyyymm_1.asYYYYMM)(issue.created_at, timezone);
-                    const { markdown, category } = (0, getContentFromIssue_1.getContentFromIssue)(issue);
-                    const section = `## ${category || date}\n`;
-                    const content = `${markdown}\n`;
-                    readme = (0, appendToReadme_1.appendToReadme)(readme, section, content);
-                    yield (0, updateIssue_1.updateIssue)(token, issue.number, 'closed');
-                    closedIssues.push(issue.number);
-                    core.info(`Closed issue #${issue.number}: ${issue.title}`);
-                }
-                catch (error) {
-                    readme = tmpReadme;
-                }
-            }
-            core.info('Update README.md');
-            fs.writeFileSync('README.md', readme, { encoding: 'utf-8' });
-            try {
-                const { name, email } = yield (0, getOwner_1.getOwner)(token);
-                core.info(`Commit and push as ${name} <${email}>`);
-                (0, commitPush_1.commitPush)(name, email);
-            }
-            catch (_a) {
-                core.info('Commit and push failed, re-open issues');
-                yield Promise.all(closedIssues.map((issueNum) => __awaiter(this, void 0, void 0, function* () { return (0, updateIssue_1.updateIssue)(token, issueNum, 'open'); })));
-            }
-            core.setOutput('time', new Date().toTimeString());
-        }
-        catch (error) {
-            if (error instanceof Error)
-                core.setFailed(error.message);
-        }
-    });
-}
-run();
-
-
-/***/ }),
-
-/***/ 1041:
+/***/ 485:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -430,7 +250,201 @@ exports.updateIssue = updateIssue;
 
 /***/ }),
 
-/***/ 6042:
+/***/ 3109:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(2186));
+const getInputs_1 = __nccwpck_require__(7233);
+const getOpenedIssues_1 = __nccwpck_require__(6548);
+const fs = __importStar(__nccwpck_require__(5747));
+const yyyymm_1 = __nccwpck_require__(9846);
+const getContentFromIssue_1 = __nccwpck_require__(821);
+const updateIssue_1 = __nccwpck_require__(485);
+const getOwner_1 = __nccwpck_require__(6942);
+const commitPush_1 = __nccwpck_require__(8853);
+const appendToReadme_1 = __nccwpck_require__(5335);
+function run() {
+    var _a, _b;
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { token, owner_only = 'false', starts_with = '', timezone = 'Asia/Seoul' } = (0, getInputs_1.getInputs)(['token', 'starts_with', 'owner_only', 'timezone']);
+            if (!token)
+                throw new Error('github_token is required');
+            const closedIssues = [];
+            const openedIssues = yield (0, getOpenedIssues_1.getOpenedIssues)({
+                token: token,
+                filter: {
+                    startsWith: starts_with,
+                    ownerOnly: JSON.parse(owner_only)
+                }
+            });
+            core.info(`Opened issues: ${openedIssues.length}`);
+            let readme = fs.readFileSync('README.md', { encoding: 'utf-8' });
+            for (const issue of openedIssues) {
+                let tmpReadme = readme;
+                try {
+                    const date = (0, yyyymm_1.asYYYYMM)(issue.created_at, timezone);
+                    const contentFromIssue = (0, getContentFromIssue_1.getContentFromIssue)(issue);
+                    if (contentFromIssue) {
+                        const section = `## ${contentFromIssue.category || date}\n`;
+                        const content = `${contentFromIssue.markdown}\n`;
+                        readme = (0, appendToReadme_1.appendToReadme)(readme, section, content);
+                    }
+                    yield (0, updateIssue_1.updateIssue)(token, issue.number, 'closed');
+                    closedIssues.push(issue.number);
+                    core.info(`Close issue #${issue.number}: ${issue.title}`);
+                }
+                catch (error) {
+                    readme = tmpReadme;
+                }
+            }
+            core.info('Update README.md');
+            fs.writeFileSync('README.md', readme, { encoding: 'utf-8' });
+            try {
+                const { name, email } = yield (0, getOwner_1.getOwner)(token);
+                let authorName = name;
+                let authorEmail = email;
+                if (openedIssues.length === 1) {
+                    authorName = ((_a = openedIssues[0].user) === null || _a === void 0 ? void 0 : _a.name) || name;
+                    authorEmail = ((_b = openedIssues[0].user) === null || _b === void 0 ? void 0 : _b.email) || email;
+                }
+                core.info(`Commit and push as ${authorName} <${authorEmail}>`);
+                (0, commitPush_1.commitPush)(authorName, authorEmail);
+            }
+            catch (_c) {
+                core.info('Commit and push failed, re-open issues');
+                yield Promise.all(closedIssues.map((issueNum) => __awaiter(this, void 0, void 0, function* () { return (0, updateIssue_1.updateIssue)(token, issueNum, 'open'); })));
+            }
+            core.setOutput('time', new Date().toTimeString());
+        }
+        catch (error) {
+            if (error instanceof Error)
+                core.setFailed(error.message);
+        }
+    });
+}
+run();
+
+
+/***/ }),
+
+/***/ 5335:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.appendToReadme = void 0;
+const constants_1 = __nccwpck_require__(5105);
+function appendToReadme(readme, section, content) {
+    const index = readme.indexOf(section);
+    if (index < 0) {
+        // find section start
+        const start = readme.indexOf(constants_1.README_SECTION_START);
+        if (start < 0) {
+            // not found
+            readme = section + content + readme;
+        }
+        else {
+            // found
+            readme =
+                readme.slice(0, start + constants_1.README_SECTION_START.length) +
+                    section +
+                    content +
+                    readme.slice(start + constants_1.README_SECTION_START.length);
+        }
+    }
+    else {
+        // found
+        readme =
+            readme.slice(0, index + section.length) +
+                content +
+                readme.slice(index + section.length);
+    }
+    return readme;
+}
+exports.appendToReadme = appendToReadme;
+
+
+/***/ }),
+
+/***/ 821:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getContentFromIssue = void 0;
+function getContentFromIssue(issue) {
+    const context = {
+        title: issue.title,
+        category: '',
+        url: '',
+        link: ''
+    };
+    const reservedKey = Object.keys(context);
+    const keyValue = (issue.body || '').split('\n');
+    if (keyValue.length > 0) {
+        keyValue.forEach(obj => {
+            const text = obj.trim().toLowerCase();
+            reservedKey.forEach(key => {
+                if (text.startsWith(`${key}:`)) {
+                    context[key] = text.replace(`${key}:`, '').trim();
+                }
+            });
+        });
+    }
+    else {
+        return null;
+    }
+    if (!context.url || !context.link)
+        return null;
+    return Object.assign(Object.assign({}, context), { markdown: markdown(context.title, context.url || context.link || issue.body || '') });
+}
+exports.getContentFromIssue = getContentFromIssue;
+function markdown(title, url) {
+    return `- [${title}](${url})\n`;
+}
+
+
+/***/ }),
+
+/***/ 9846:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";

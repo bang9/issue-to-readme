@@ -1,14 +1,14 @@
 import * as core from '@actions/core'
 
-import {getInputs} from './getInputs'
-import {getOpenedIssues} from './getOpenedIssues'
+import {getInputs} from './actions/getInputs'
+import {getOpenedIssues} from './github/getOpenedIssues'
 import * as fs from 'fs'
-import {asYYYYMM} from './yyyymm'
-import {getContentFromIssue} from './getContentFromIssue'
-import {updateIssue} from './updateIssue'
-import {getOwner} from './getOwner'
-import {commitPush} from './commitPush'
-import {appendToReadme} from './appendToReadme'
+import {asYYYYMM} from './utils/yyyymm'
+import {getContentFromIssue} from './utils/getContentFromIssue'
+import {updateIssue} from './github/updateIssue'
+import {getOwner} from './github/getOwner'
+import {commitPush} from './git/commitPush'
+import {appendToReadme} from './utils/appendToReadme'
 
 async function run(): Promise<void> {
   try {
@@ -21,6 +21,7 @@ async function run(): Promise<void> {
 
     if (!token) throw new Error('github_token is required')
 
+    const closedIssues: number[] = []
     const openedIssues = await getOpenedIssues({
       token: token,
       filter: {
@@ -28,8 +29,8 @@ async function run(): Promise<void> {
         ownerOnly: JSON.parse(owner_only) as boolean
       }
     })
+
     core.info(`Opened issues: ${openedIssues.length}`)
-    const closedIssues: number[] = []
 
     let readme = fs.readFileSync('README.md', {encoding: 'utf-8'})
     for (const issue of openedIssues) {
@@ -37,15 +38,15 @@ async function run(): Promise<void> {
 
       try {
         const date = asYYYYMM(issue.created_at, timezone)
-        const {markdown, category} = getContentFromIssue(issue)
-        const section = `## ${category || date}\n`
-        const content = `${markdown}\n`
-
-        readme = appendToReadme(readme, section, content)
-
+        const contentFromIssue = getContentFromIssue(issue)
+        if (contentFromIssue) {
+          const section = `## ${contentFromIssue.category || date}\n`
+          const content = `${contentFromIssue.markdown}\n`
+          readme = appendToReadme(readme, section, content)
+        }
         await updateIssue(token, issue.number, 'closed')
         closedIssues.push(issue.number)
-        core.info(`Closed issue #${issue.number}: ${issue.title}`)
+        core.info(`Close issue #${issue.number}: ${issue.title}`)
       } catch (error) {
         readme = tmpReadme
       }
@@ -55,8 +56,17 @@ async function run(): Promise<void> {
     fs.writeFileSync('README.md', readme, {encoding: 'utf-8'})
     try {
       const {name, email} = await getOwner(token)
-      core.info(`Commit and push as ${name} <${email}>`)
-      commitPush(name, email)
+
+      let authorName = name
+      let authorEmail = email
+
+      if (openedIssues.length === 1) {
+        authorName = openedIssues[0].user?.name || name
+        authorEmail = openedIssues[0].user?.email || email
+      }
+
+      core.info(`Commit and push as ${authorName} <${authorEmail}>`)
+      commitPush(authorName, authorEmail)
     } catch {
       core.info('Commit and push failed, re-open issues')
       await Promise.all(

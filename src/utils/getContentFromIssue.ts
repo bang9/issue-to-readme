@@ -21,7 +21,11 @@ export function getContentFromIssue(issue: {
         }
       })
     })
+  } else {
+    return null
   }
+
+  if (!context.url || !context.link) return null
 
   return {
     ...context,
